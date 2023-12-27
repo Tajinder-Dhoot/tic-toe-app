@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const initialGameBoard = [
     [null, null, null],
@@ -6,15 +6,29 @@ const initialGameBoard = [
     [null, null, null],
 ];
 
-function GameBoard() {
-  return (
+function GameBoard({ onSelectSquare, activePlayerSymbol }) {
+    const [gameBoard, setGameBoard] = useState(initialGameBoard);
+
+    function handleSelectSquare(rowIndex, colIndex) {
+        setGameBoard((prevGameBoard) => {
+            const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])];
+            updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
+            return updatedBoard;
+        });
+
+        onSelectSquare();
+    }
+
+    console.log("rendering gameboard component");
+
+    return (
     <ol id='game-board'>
-        {initialGameBoard.map((row, rowIndex) => (
+        {gameBoard.map((row, rowIndex) => (
             <li key={rowIndex}>
                 <ol>
                     {row.map((playerSymbol, colIndex) => (
                         <li key={colIndex}>
-                            <button>{playerSymbol}</button>
+                            <button onClick={() => handleSelectSquare(rowIndex, colIndex)}>{playerSymbol}</button>
                         </li>
                     ))}
                 </ol>
@@ -22,17 +36,7 @@ function GameBoard() {
         ))
     }
     </ol>
-
-
-
-    // <ol>
-    //     <li> // row
-    //         <ol>
-    //             <li></li> // col
-    //         </ol>
-    //     </li>
-    // </ol>
-  )
+    )
 }
 
 export default GameBoard
